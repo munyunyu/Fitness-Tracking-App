@@ -20,3 +20,8 @@ namespace Fitness_Tracking_App
         }
     }
 }
+
+
+//Enable-Migrations
+//Add-migration Init
+//update-database
