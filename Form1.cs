@@ -14,12 +14,12 @@ namespace Fitness_Tracking_App
 {
     public partial class Form1 : Form
     {
-        private readonly AppDbContext context;
+        private readonly DatabaseService context;
         public Form1()
         {
             InitializeComponent();
 
-            context = new AppDbContext();
+            context = new DatabaseService();
         }
 
         private void loginBtn_Click(object sender, EventArgs e)
@@ -29,7 +29,7 @@ namespace Fitness_Tracking_App
 
             //perform login functionality
             //get the user by username and then compare the password
-            var record = context.TblUser.SingleOrDefault(x => x.Username == usernameTxt.Text.ToLower());
+            var record = context.ReadDataFromJsonFile().SingleOrDefault(x => x.Username == usernameTxt.Text.ToLower());
 
             if (record != null)
             {
@@ -56,7 +56,7 @@ namespace Fitness_Tracking_App
         private void SeedDatabaseWithAdminUser()
         {
             //check if table has any record
-            var exists = context.TblUser.Any();
+            var exists = context.ReadDataFromJsonFile().Any();
 
             //if record was found, abort user creation
             if (exists) return;
@@ -71,22 +71,9 @@ namespace Fitness_Tracking_App
             };
 
             //add new record to the TblUser table
-            context.TblUser.Add(record);
-
             //Save changes to the database
-            context.SaveChanges();
+            context.AddOrUpdateDataToJsonFile(record);
         }
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            
-            context.Dispose();
-
-            base.OnFormClosing(e);
-        }
-
-
-
 
     }
 }
